@@ -1,190 +1,165 @@
-#include "../include/glad/gl.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "EDC/edcvec.h"
+#include "glad/gl.h"
+#include "shaderManager.h"
+#include "stb_image.h"
+#include "windowManager.h"
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+// #define DEBUG
 #define WIDTH 800
 #define HEIGHT 600
 
-#define MAX_SHADERS_SIZE 400
+vec2 resolution = {WIDTH, HEIGHT};
+unsigned int shaderProgram;
 
-typedef GLuint uint32;
-
-int attachShader(uint32 *shaderProgram);
-void key_callback(GLFWwindow *window, int key, int scancode, int action,
-                  int mods);
-void sendShaders2Buffers(FILE *fptr, const uint32 filesize, uint32 shader);
-int openShader(const char *path, uint32 shader);
-
-const char *VERTEX_SHADER_PATH = "shaders/triangleVert.glsl";
-const char *FRAGMENT_SHADER_PATH = "shaders/triangleFrag.glsl";
+void glTest(GLFWwindow *window);
+void init(GLFWwindow **window);
+GLFWwindow *createWindow();
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+void processInput(GLFWwindow *window);
+void drawQuad();
 
 int main() {
   GLFWwindow *window;
+  init(&window);
 
-  float vertices[] = {
-      0.5f,  0.5f,  0.0f, // top right
-      0.5f,  -0.5f, 0.0f, // bottom right
-      -0.5f, -0.5f, 0.0f, // bottom left
-      -0.5f, 0.5f,  0.0f  // top left
-  };
-  unsigned int indices[] = {
-      // note that we start from 0!
-      0, 1, 3, // first triangle
-      1, 2, 3  // second triangle
-  };
+  glTest(window);
 
-  int version;
-  uint32 EBO;
-  uint32 VBO;
-  uint32 VAO;
-  uint32 shaderProgram;
+  glfwDestroyWindow(window);
+  glfwTerminate();
+  return 0;
+}
 
-  fputs("my test of my sanity continues\n", stdout);
+void glTest(GLFWwindow *window) {
+  unsigned int VBO;
+  unsigned int VAO;
+  unsigned int EBO;
+  unsigned int texture;
 
-  glfwInit();
+  int width, height, nrChannels;
+  unsigned char *data;
 
-  printf("creating window\n");
+  float borderColor[] = {1.0f, 1.0f, 0.0f, 1.0f};
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-  glfwWindowHint(GLFW_REFRESH_RATE, 1);
-  window = glfwCreateWindow(WIDTH, HEIGHT, "akil sagligini kaybet", NULL, NULL);
-  glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_TRUE);
-  glfwMakeContextCurrent(window);
+  double timer = glfwGetTime();
 
-  glfwSetKeyCallback(window, key_callback);
-
-  if (!gladLoaderLoadGL()) {
-    printf("cannot load glad");
-    return -1;
-  }
-
-  printf("Loading Glad\n");
-  version = gladLoaderLoadGL();
-  if (version == 0) {
-    fputs("Failed to initialize OpenGL context", stdout);
-    glfwTerminate();
-    return -1;
-  }
-  printf("OpenGL Version: %d.%d\n", GLAD_VERSION_MAJOR(version),
-         GLAD_VERSION_MINOR(version));
-
-  glViewport(0, 0, WIDTH, HEIGHT);
-
-  printf("attaching shader\n");
-  if (attachShader(&shaderProgram) == -1) {
-    glfwTerminate();
-    return -1;
-  }
-
-  glGenVertexArrays(1, &VAO);
-  glBindVertexArray(VAO);
+  stbi_set_flip_vertically_on_load(1);
 
   glGenBuffers(1, &VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+  glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &EBO);
+  glGenTextures(1, &texture);
+
+  glBindVertexArray(VAO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
-               GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-  glEnableVertexAttribArray(0);
+  drawQuad();
 
+  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+  glBindTexture(GL_TEXTURE_2D, texture);
+
+  data = stbi_load("textures/choko_10x.png", &width, &height, &nrChannels, 0);
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, data);
+  glGenerateMipmap(GL_TEXTURE_2D);
+
+  stbi_image_free(data);
+
+  createFullShader(&shaderProgram, "shaders/triangleVert.glsl",
+                   "shaders/triangleFrag.glsl", NULL);
+  glUseProgram(shaderProgram);
+  glUniform1i(glGetUniformLocation(shaderProgram, "ourTexture"), 0);
+
+  /* mainloop */
   while (!glfwWindowShouldClose(window)) {
-    glfwPollEvents();
-
-    if (glfwGetKey(window, GLFW_KEY_F))
-      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    else
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    glClearColor(0.1, 0.1, 0.15, 1.0);
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shaderProgram);
+    if (glfwGetKey(window, GLFW_KEY_F5) || (int)(glfwGetTime() - timer) % 5) {
+      createFullShader(&shaderProgram, "shaders/triangleVert.glsl",
+                       "shaders/triangleFrag.glsl", NULL);
+      int width, height;
+      glfwGetWindowSize(window, &width, &height);
+      glUniform2f(glGetUniformLocation(shaderProgram, "u_resolution"), width,
+                  height);
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
 
     glfwSwapBuffers(window);
+    glfwPollEvents();
+    processInput(window);
   }
 
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
   glDeleteBuffers(1, &EBO);
+
   glDeleteProgram(shaderProgram);
-
-  glfwTerminate();
-  return 0;
 }
 
-void key_callback(GLFWwindow *window, int key, int scancode, int action,
-                  int mods) {
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, GLFW_TRUE);
+void drawQuad() {
+
+  float vertices[] = {
+      0.5,  0.5,  0.0f, 0.5,  0.15, 0.25, 1, 1, // top right
+      0.5,  -0.5, 0.0f, 0.9,  0.7,  0.1,  1, 0, // bottom right
+      -0.5, -0.5, 0.0f, 0.15, 0.02, 0.2,  0, 0, // bottom left
+      -0.5, 0.5,  0.0f, 0.5,  0.3,  0.7,  0, 1, // top left
+  };
+  unsigned int indices[] = {
+      0, 1, 3, // first triangle
+      1, 2, 3  // second triangle
+  };
+
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
+               GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                        (void *)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                        (void *)(6 * sizeof(float)));
+  glEnableVertexAttribArray(2);
 }
 
-int openShader(const char *path, uint32 shader) {
-  GLchar *buffer;
-  FILE *fptr;
-  int filesize;
-
-  fptr = fopen(path, "r");
-  if (fptr == NULL) {
-    printf("\t !! unable to open shader file\n");
-    return -1;
+void init(GLFWwindow **window) {
+  unsigned int version;
+  if (!glfwInit()) {
+    printf("!! cant initialize glfw\n");
+    exit(1);
   }
-  printf("calculating filesize\n");
-  fseek(fptr, 0, SEEK_END);
-  filesize = ftell(fptr) + 1;
-  fseek(fptr, 0, SEEK_SET);
-  printf("filesize : %d\n", filesize);
+  if ((*window = createWindow()) == NULL) {
+    printf("!! cant create window\n");
+    glfwTerminate();
+    exit(1);
+  }
+  version = gladLoaderLoadGL();
+  if (version == 0) {
+    fputs("!! Failed to initialize OpenGL context", stdout);
+    glfwTerminate();
+    exit(1);
+  }
+  glViewport(0, 0, WIDTH, HEIGHT);
+  glfwSetFramebufferSizeCallback(*window, framebuffer_size_callback);
 
-  printf("allocating buffer\n");
-  buffer = malloc(sizeof(char) * filesize + 1);
-  printf("writing shader to buffer\n");
-  fread(buffer, sizeof(char), filesize - 1, fptr);
-  buffer[filesize] = '\0';
-
-  printf("\nshader:\n%s\n\n", buffer);
-
-  printf("getting shader source" "\n");
-  glShaderSource(shader, 1, (const char **)&buffer, &filesize);
-  printf("compiling shader\n");
-  glCompileShader(shader);
-
-  printf("free buffer\n");
-  fclose(fptr);
-  return 0;
-}
-
-int attachShader(uint32 *shaderProgram) {
-  uint32 vertexShader;
-  uint32 fragmentShader;
-
-  vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  if (openShader(VERTEX_SHADER_PATH, vertexShader) == -1)
-    return -1;
-
-  fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  if (openShader(FRAGMENT_SHADER_PATH, fragmentShader) == -1)
-    return -1;
-
-  *shaderProgram = glCreateProgram();
-  glAttachShader(*shaderProgram, vertexShader);
-  glAttachShader(*shaderProgram, fragmentShader);
-
-  glLinkProgram(*shaderProgram);
-  glUseProgram(*shaderProgram);
-
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
-
-  return 0;
+  /* give user opengl feedback */
+  printf("OpenGL Version: %d.%d\n", GLAD_VERSION_MAJOR(version),
+         GLAD_VERSION_MINOR(version));
 }

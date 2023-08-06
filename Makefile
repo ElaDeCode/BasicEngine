@@ -1,7 +1,7 @@
-CC = gcc
-SRCS = src/main.c src/gl.c
+CC = gcc 
+SRCS = src/main.c src/gl.c src/shaderManager.c src/fileManager.c src/windowManager.c
 FLAGS = -Wall -Wextra
-LIBS = -lglfw
+LIBS = -lglfw -lm
 EXEC = a.out
 
 install:
