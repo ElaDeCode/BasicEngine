@@ -10,7 +10,7 @@ int createBufferFromFile(char **dst, const char *path) {
   fptr = fopen(path, "rb");
   if (fptr == NULL) {
     printf("\t !! unable to open file\n");
-    return FM_FILE_OPEN_FAIL;
+    return 0;
   }
 
   /* calculate filesize */
@@ -22,9 +22,9 @@ int createBufferFromFile(char **dst, const char *path) {
   *dst = malloc(sizeof(char) * (filesize + 1));
   if (!dst) {
     printf("couldn't create buffer\n"
-           "for file : %s",
+           "for file : %s\n",
            path);
-    return FM_MALLOC_FAIL;
+    return 0;
   }
   fread(*dst, sizeof(char), filesize, fptr);
 
