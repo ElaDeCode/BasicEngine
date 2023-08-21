@@ -1,13 +1,14 @@
-#include "shaderManager.h"
-#include "fileManager.h"
+#include "shader.h"
 #include "glad/gl.h"
+#include "modules/io/fileManager.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+static char infoLog[500];
 
 int createFullShader(unsigned int *shaderProgram, const char *vertPath,
                      const char *fragPath, const char *geoPath) {
   int success;
-  char infoLog[500];
 
   glUseProgram(0);
   glDeleteProgram(*shaderProgram);
@@ -23,7 +24,7 @@ int createFullShader(unsigned int *shaderProgram, const char *vertPath,
   if (geoPath != NULL) {
     attachShaderToProgram(*shaderProgram, geoPath, GL_GEOMETRY_SHADER);
   }
-  
+
   glLinkProgram(*shaderProgram);
   glGetProgramiv(*shaderProgram, GL_LINK_STATUS, &success);
   if (!success) {
@@ -35,10 +36,10 @@ int createFullShader(unsigned int *shaderProgram, const char *vertPath,
 }
 
 int attachShaderToProgram(unsigned int shaderProgram, const char *path,
-                          GLenum ShaderType) {
+                          unsigned int SHADER_TYPE) {
   unsigned int shader;
 
-  shader = glCreateShader(ShaderType);
+  shader = glCreateShader(SHADER_TYPE);
   if (compileShader(path, shader) == -1)
     return -1;
 
@@ -52,7 +53,6 @@ int compileShader(const char *path, unsigned int shader) {
   char *buffer;
   int bufferSize;
   int success;
-  char infoLog[500];
 
   bufferSize = createBufferFromFile(&buffer, path);
   if (!buffer) {

@@ -1,8 +1,7 @@
-target_sources(${PROJECT_NAME} PRIVATE 
-window.c
-sceneManager.c
-shaderManager.c
-fileManager.c
-gl.c
-spriteLoader.c
-)
+target_sources(${PROJECT_NAME} PRIVATE gl.c)
+
+add_subdirectory(modules)
+add_subdirectory(objects)
+add_subdirectory(math)
+
+target_link_libraries(${PROJECT_NAME} glfw m)
