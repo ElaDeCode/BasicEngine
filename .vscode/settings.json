@@ -1,0 +1,22 @@
+{
+  "files.associations": {
+    "window.h": "c",
+    "glfw3.h": "c",
+    "stdbool.h": "c",
+    "scene.h": "c",
+    "shaderc.h": "c",
+    "shader.h": "c",
+    "cstdlib": "c",
+    "gl.h": "c",
+    "scenemanager.h": "c",
+    "cuboid.h": "c",
+    "camera.h": "c",
+    "stdlib.h": "c",
+    "keyhandle.h": "c",
+    "cmath": "c",
+    "math.h": "c",
+    "transform.h": "c",
+    "linearalgebra.h": "c"
+  },
+  "C_Cpp.default.includePath": ["${workspaceFolder}/src"]
+}

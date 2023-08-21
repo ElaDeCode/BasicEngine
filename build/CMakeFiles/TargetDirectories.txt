@@ -1,5 +1,0 @@
-/home/ali/project/code/c/elangine_cleanup/build/CMakeFiles/elangine.dir
-/home/ali/project/code/c/elangine_cleanup/build/CMakeFiles/edit_cache.dir
-/home/ali/project/code/c/elangine_cleanup/build/CMakeFiles/rebuild_cache.dir
-/home/ali/project/code/c/elangine_cleanup/build/src/CMakeFiles/edit_cache.dir
-/home/ali/project/code/c/elangine_cleanup/build/src/CMakeFiles/rebuild_cache.dir
