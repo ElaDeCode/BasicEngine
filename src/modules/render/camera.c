@@ -40,15 +40,15 @@ void handleCameraMovement(Camera *camera) {
   if (engine.mouseCaptured) {
 
     int windowSize[2];
-    glfwGetWindowSize(window.window, windowSize, windowSize + 1);
+    glfwGetWindowSize(window, windowSize, windowSize + 1);
 
     double cursorPos[2];
-    glfwGetCursorPos(window.window, cursorPos, cursorPos + 1);
+    glfwGetCursorPos(window, cursorPos, cursorPos + 1);
 
     camera->rotation.yaw += (cursorPos[0] - windowSize[0] / 2.0) / 100;
     camera->rotation.pitch += (windowSize[1] / 2.0 - cursorPos[1]) / 100;
 
-    glfwSetCursorPos(window.window, windowSize[0] / 2.0, windowSize[1] / 2.0);
+    glfwSetCursorPos(window, windowSize[0] / 2.0, windowSize[1] / 2.0);
   }
 }
 

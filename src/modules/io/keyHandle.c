@@ -4,7 +4,7 @@
 
 void handleInput(Window *window) {}
 
-inline int getKey(Window window, int key) { return glfwGetKey(window.window, key); }
+inline int getKey(Window window, int key) { return glfwGetKey(window, key); }
 
 inline float getAxis(Window window, int keyA, int keyB) {
   return getKey(window, keyA) - getKey(window, keyB);

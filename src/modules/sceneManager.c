@@ -27,7 +27,7 @@ void loadDefaultScene() {
   camera->uRot = glGetUniformLocation(shader, "uCameraRot");
 
   glEnable(GL_DEPTH_TEST);
-  while (!glfwWindowShouldClose(engine.window.window)) {
+  while (!glfwWindowShouldClose(engine.window)) {
     glClearColor(0.1, 0.15, 0.2, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -36,9 +36,9 @@ void loadDefaultScene() {
 
     if (getKey(window, GLFW_KEY_F) && !engine.mouseCaptured) {
       int windowSize[2];
-      glfwGetWindowSize(window.window, windowSize, windowSize + 1);
+      glfwGetWindowSize(window, windowSize, windowSize + 1);
       engine.mouseCaptured = 1;
-      glfwSetCursorPos(window.window, windowSize[0] / 2.0, windowSize[1] / 2.0);
+      glfwSetCursorPos(window, windowSize[0] / 2.0, windowSize[1] / 2.0);
     } else if (!getKey(window, GLFW_KEY_F))
       engine.mouseCaptured = 0;
 
@@ -57,7 +57,7 @@ void loadDefaultScene() {
         camera->position.z / 100  //
     );
 
-    glfwSwapBuffers(window.window);
+    glfwSwapBuffers(window);
 
     glfwPollEvents();
   }
