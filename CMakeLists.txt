@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.27.1)
 
 project(elangine)
 
-# test comment
 include_directories(src)
 
 find_package(glfw3)
