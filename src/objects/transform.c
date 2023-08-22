@@ -32,3 +32,27 @@ void getRotationMatrix(float yaw, float pitch, float roll, float result[9]) {
 
   mat3Mult(midResult, z, result);
 }
+
+inline void getForward(float rotation[3], float forward[3]) {
+  forward[0] = cosf(rotation[1]) * sinf(rotation[0]);
+  forward[1] = sinf(rotation[1]);
+  forward[2] = cosf(rotation[1]) * cosf(rotation[0]);
+}
+
+inline void getRight(float rotation[3], float right[3]) {
+  right[0] = cosf(rotation[0]);
+  right[1] = 0;
+  right[2] = -sinf(rotation[0]);
+}
+
+inline void getUp(float rotation[3], float up[3]) {
+  up[0] = -sinf(rotation[1]) * sinf(rotation[0]);
+  up[1] = cosf(rotation[1]);
+  up[2] = -sin(rotation[1]) * cosf(rotation[0]);
+}
+
+inline void translate(float position[3], float vector[3]) {
+  for (int i = 0; i < 3; i++) {
+    position[i] += vector[i];
+  }
+}

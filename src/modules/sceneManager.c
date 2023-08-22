@@ -10,8 +10,6 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
-void handleCameraMovement(Camera *camera);
-
 extern Engine engine;
 Window window;
 
@@ -66,24 +64,4 @@ void loadDefaultScene() {
 
   glUseProgram(0);
   glDeleteProgram(shader);
-}
-
-void handleCameraMovement(Camera *camera) {
-  camera->position.x += getKey(window, GLFW_KEY_D) - getKey(window, GLFW_KEY_A);
-  camera->position.y += getKey(window, GLFW_KEY_E) - getKey(window, GLFW_KEY_Q);
-  camera->position.z += getKey(window, GLFW_KEY_W) - getKey(window, GLFW_KEY_S);
-
-  if (engine.mouseCaptured) {
-
-    int windowSize[2];
-    glfwGetWindowSize(window.window, windowSize, windowSize + 1);
-
-    double cursorPos[2];
-    glfwGetCursorPos(window.window, cursorPos, cursorPos + 1);
-
-    camera->rotation.yaw += (cursorPos[0] - windowSize[0] / 2.0) / 100;
-    camera->rotation.pitch += (windowSize[1] / 2.0 - cursorPos[1]) / 100;
-
-    glfwSetCursorPos(window.window, windowSize[0] / 2.0, windowSize[1] / 2.0);
-  }
 }

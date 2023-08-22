@@ -16,7 +16,10 @@
     "cmath": "c",
     "math.h": "c",
     "transform.h": "c",
-    "linearalgebra.h": "c"
+    "linearalgebra.h": "c",
+    "graphblas.h": "c",
+    "sdl_video.h": "c",
+    "sdl_render.h": "c"
   },
   "C_Cpp.default.includePath": ["${workspaceFolder}/src"]
 }
