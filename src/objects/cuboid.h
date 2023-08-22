@@ -9,8 +9,8 @@ typedef struct Cuboid {
   int _uPosition; // stores the uniform uPosition adress on the shader
 } Cuboid;
 
+Cuboid *newCuboid();
 void transferData(unsigned int vao, unsigned int vbo, unsigned int ibo);
-Cuboid *newCuboid(float xScale, float yScale, float zScale);
 void destroyCuboid(Cuboid *cuboid);
 void drawCuboid(Cuboid *cuboid);
 
