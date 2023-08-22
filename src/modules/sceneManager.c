@@ -34,9 +34,12 @@ void loadDefaultScene() {
     glUseProgram(shader);
     drawCuboid(cuboid);
 
-    if (getKey(window, GLFW_KEY_F)) {
+    if (getKey(window, GLFW_KEY_F) && !engine.mouseCaptured) {
+      int windowSize[2];
+      glfwGetWindowSize(window.window, windowSize, windowSize + 1);
       engine.mouseCaptured = 1;
-    } else
+      glfwSetCursorPos(window.window, windowSize[0] / 2.0, windowSize[1] / 2.0);
+    } else if (!getKey(window, GLFW_KEY_F))
       engine.mouseCaptured = 0;
 
     handleCameraMovement(camera);
