@@ -11,6 +11,7 @@ typedef struct Camera {
 } Camera;
 
 Camera *newCamera();
+void handleCameraMovement(Camera *camera);
 void destroyCamera(Camera *camera);
 
 #endif

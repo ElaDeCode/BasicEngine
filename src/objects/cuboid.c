@@ -28,7 +28,7 @@ static unsigned int cuboidIndices[] = {
     1, 7, 3  //
 };
 
-Cuboid *newCuboid(float xScale, float yScale, float zScale) {
+Cuboid *newCuboid() {
   Cuboid *cuboid = malloc(sizeof(Cuboid));
 
   glGenVertexArrays(1, &cuboid->vao);

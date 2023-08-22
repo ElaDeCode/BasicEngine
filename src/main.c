@@ -11,6 +11,7 @@
 
 Engine engine;
 
+//! reminder to move this to the resourceManager.c
 void cleanAllResources();
 
 int main() {
