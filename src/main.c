@@ -9,7 +9,10 @@
 #define HEIGHT 600
 #define TITLE "best title ever"
 
-Engine engine;
+Engine engine = {
+    .isRunning = 1,
+    .mouseCaptured = 0,
+};
 
 //! reminder to move this to the resourceManager.c
 void cleanAllResources();
@@ -26,8 +29,6 @@ int main() {
 void initEngine() {
   glfwInit();
   engine.window = createWindow(WIDTH, HEIGHT, TITLE);
-  engine.isRunning = 1;
-  engine.mouseCaptured = 1;
   initOpenGL();
 }
 
