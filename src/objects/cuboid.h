@@ -4,14 +4,18 @@
 #include "transform.h"
 
 typedef struct Cuboid {
-  unsigned int vao, vbo, ibo, shader;
-  Transform transform;
-  int _uPosition; // stores the uniform uPosition adress on the shader
+  Position position;
+  Rotation rotation;
+  Scale scale;
+  // address of the variabless which are stored in gpu
+  unsigned int shader; // adress of the shader
+  int _uPosition; // visual position
+  int _uRotation; // visual rotation
+  int _uScale; // visual scale
 } Cuboid;
 
-Cuboid *newCuboid();
-void transferData(unsigned int vao, unsigned int vbo, unsigned int ibo);
-void destroyCuboid(Cuboid *cuboid);
-void drawCuboid(Cuboid *cuboid);
+void initCuboid();
+void terminateCuboid();
+void drawCuboid();
 
 #endif

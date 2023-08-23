@@ -6,15 +6,11 @@ typedef struct vec3 {
 } vec3;
 
 typedef vec3 Position;
+typedef vec3 Scale;
 
 typedef struct Rotation {
   float yaw, pitch, roll;
 } Rotation;
-
-typedef struct Transform {
-  Position position;
-  Rotation rotation;
-} Transform;
 
 void getRotationMatrix(float yaw, float pitch, float roll, float result[9]);
 

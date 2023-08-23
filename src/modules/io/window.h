@@ -4,9 +4,7 @@
 #include "glad/gl.h"
 #include <GLFW/glfw3.h>
 
-typedef struct Window {
-  GLFWwindow *window;
-} Window;
+typedef GLFWwindow *Window;
 
 Window createWindow(int width, int height, const char *title);
 void destroyWindow(Window window);

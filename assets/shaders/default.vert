@@ -15,7 +15,7 @@ float perspectiveZ = 0.7;
 
 void main() {
   vec3 relativePos = (aPos - uCameraPos) * uCameraRot;
-  vec4 view = vec4(relativePos.xyz, 1 + perspectiveZ * relativePos.z);
+  vec4 view = vec4(relativePos.xy, relativePos.z / 100.0, 1 + perspectiveZ * relativePos.z);
   vec4 renderPos = vec4(view.x * wRatio, view.yzw);
   gl_Position = renderPos;
   fragPos = aPos + vec3(0.5);
