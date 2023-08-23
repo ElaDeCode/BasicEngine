@@ -2,7 +2,6 @@
 #include "io/keyHandle.h"
 #include "modules/render/shader.h"
 #include "objects/cuboid.h"
-#include "objects/transform.h"
 #include "render/camera.h"
 #include "scene.h"
 
@@ -22,15 +21,20 @@ void loadDefaultScene() {
 
   initCuboid();
   Camera *camera = newCamera();
+  camera->position.y = 100;
   bindCamera(shader, camera);
 
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+  double lastMeasure = glfwGetTime();
+  int fps = 0;
   while (!glfwWindowShouldClose(engine.window)) {
     glClearColor(0.1, 0.15, 0.2, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shader);
-    drawCuboid();
+    drawCuboidsInstanced(30000);
 
     handleCameraMovement(camera);
 
@@ -47,6 +51,12 @@ void loadDefaultScene() {
     }
 
     glfwSwapBuffers(window);
+    if (glfwGetTime() - lastMeasure > 1) {
+      printf("FPS: %d\n", fps);
+      lastMeasure = glfwGetTime();
+      fps = 0;
+    }
+    else ++fps;
     glfwPollEvents();
   }
 

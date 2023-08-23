@@ -11,7 +11,7 @@ Camera *newCamera() { return calloc(1, sizeof(Camera)); }
 
 inline void handleCameraMovement(Camera *camera) {
   // todo add a function to change movement speed
-  float movementSpeed = 0.01;
+  float movementSpeed = 1;
   float mouseSensivity = 0.01;
 
   // Get main window
