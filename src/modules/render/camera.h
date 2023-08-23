@@ -12,6 +12,7 @@ typedef struct Camera {
 
 Camera *newCamera();
 void handleCameraMovement(Camera *camera);
+void bindCamera(unsigned int shader, Camera *camera);
 void destroyCamera(Camera *camera);
 
 #endif

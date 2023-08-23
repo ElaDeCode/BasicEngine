@@ -22,9 +22,7 @@ void loadDefaultScene() {
 
   initCuboid();
   Camera *camera = newCamera();
-
-  camera->uPos = glGetUniformLocation(shader, "uCameraPos");
-  camera->uRot = glGetUniformLocation(shader, "uCameraRot");
+  bindCamera(shader, camera);
 
   glEnable(GL_DEPTH_TEST);
   while (!glfwWindowShouldClose(engine.window)) {
@@ -34,31 +32,18 @@ void loadDefaultScene() {
     glUseProgram(shader);
     drawCuboid();
 
-    if (getKey(window, GLFW_KEY_F) && !engine.mouseCaptured) {
+    handleCameraMovement(camera);
+
+    // Center cursor if mouseCaptured
+    if (getKey(window, GLFW_KEY_F)) {
       int windowSize[2];
       glfwGetWindowSize(window, windowSize, windowSize + 1);
       engine.mouseCaptured = 1;
       glfwSetCursorPos(window, windowSize[0] / 2.0, windowSize[1] / 2.0);
-    } else if (!getKey(window, GLFW_KEY_F))
+    } else
       engine.mouseCaptured = 0;
 
-    handleCameraMovement(camera);
-
-    float rotation[9];
-    getRotationMatrix(camera->rotation.yaw, camera->rotation.pitch,
-                      camera->rotation.roll, rotation);
-
-    glUniformMatrix3fv(camera->uRot, 1, GL_FALSE, rotation);
-
-    glUniform3f(                  //
-        camera->uPos,             //
-        camera->position.x / 100, //
-        camera->position.y / 100, //
-        camera->position.z / 100  //
-    );
-
     glfwSwapBuffers(window);
-
     glfwPollEvents();
   }
 
