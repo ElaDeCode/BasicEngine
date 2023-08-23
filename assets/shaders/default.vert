@@ -18,11 +18,11 @@ float perspectiveZ = 0.7;
 void main() {
   InstanceID = gl_InstanceID;
 
-  vec3 relativePos =
-      (aPos +
-       (vec3(1.1, 0, 0) * (InstanceID % 1000) + vec3(0, 0, 1.1) * InstanceID) -
-       uCameraPosition) *
-      uCameraRotation;
+  vec3 relativePos = (aPos - uCameraPosition + //
+                      vec3(1.1, 0, 0) * (InstanceID % 200) +
+                      vec3(0, 0, 1.1) * ((InstanceID / 200) % 200) +
+                      vec3(0, 1.1, 0) * (InstanceID / 40000)) *
+                     uCameraRotation;
   vec4 view = vec4(relativePos.xy, relativePos.z / 100.0,
                    1 + perspectiveZ * relativePos.z);
   vec4 renderPos = vec4(view.x * wRatio, view.yzw);
