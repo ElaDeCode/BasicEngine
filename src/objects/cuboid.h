@@ -17,5 +17,6 @@ typedef struct Cuboid {
 void initCuboid();
 void terminateCuboid();
 void drawCuboid();
+void drawCuboidsInstanced(unsigned int count);
 
 #endif

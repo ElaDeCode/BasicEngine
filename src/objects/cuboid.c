@@ -66,3 +66,9 @@ void drawCuboid() {
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }
+
+void drawCuboidsInstanced(unsigned int count) {
+  glBindVertexArray(cuboidVAO);
+  glDrawElementsInstanced(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0, count);
+  glBindVertexArray(0);
+}

@@ -5,17 +5,26 @@ layout(location = 0) in vec3 aPos;
 out vec3 fragPos;
 
 uniform vec3 uPos = vec3(0);
-uniform vec3 uCameraPos = vec3(0);
-uniform mat3 uCameraRot = mat3(1, 0, 0, //
-                               0, 1, 0, //
-                               0, 0, 1);
+uniform vec3 uCameraPosition = vec3(0);
+uniform mat3 uCameraRotation = mat3(1, 0, 0, //
+                                    0, 1, 0, //
+                                    0, 0, 1);
+
+flat out int InstanceID;
 
 float wRatio = 0.75;
 float perspectiveZ = 0.7;
 
 void main() {
-  vec3 relativePos = (aPos - uCameraPos) * uCameraRot;
-  vec4 view = vec4(relativePos.xy, relativePos.z / 100.0, 1 + perspectiveZ * relativePos.z);
+  InstanceID = gl_InstanceID;
+
+  vec3 relativePos = (aPos - uCameraPosition + //
+                      vec3(1.1, 0, 0) * (InstanceID % 200) +
+                      vec3(0, 0, 1.1) * ((InstanceID / 200) % 200) +
+                      vec3(0, 1.1, 0) * (InstanceID / 40000)) *
+                     uCameraRotation;
+  vec4 view = vec4(relativePos.xy, relativePos.z / 100.0,
+                   1 + perspectiveZ * relativePos.z);
   vec4 renderPos = vec4(view.x * wRatio, view.yzw);
   gl_Position = renderPos;
   fragPos = aPos + vec3(0.5);

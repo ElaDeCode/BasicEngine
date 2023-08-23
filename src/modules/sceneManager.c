@@ -2,7 +2,6 @@
 #include "io/keyHandle.h"
 #include "modules/render/shader.h"
 #include "objects/cuboid.h"
-#include "objects/transform.h"
 #include "render/camera.h"
 #include "scene.h"
 
@@ -22,43 +21,42 @@ void loadDefaultScene() {
 
   initCuboid();
   Camera *camera = newCamera();
-
-  camera->uPos = glGetUniformLocation(shader, "uCameraPos");
-  camera->uRot = glGetUniformLocation(shader, "uCameraRot");
+  camera->position.y = 100;
+  bindCamera(shader, camera);
 
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+  double lastMeasure = glfwGetTime();
+  int fps = 0;
   while (!glfwWindowShouldClose(engine.window)) {
     glClearColor(0.1, 0.15, 0.2, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shader);
-    drawCuboid();
+    drawCuboidsInstanced(30000);
 
-    if (getKey(window, GLFW_KEY_F) && !engine.mouseCaptured) {
+    handleCameraMovement(camera);
+
+    // Center cursor if mouseCaptured
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT)) {
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
       int windowSize[2];
       glfwGetWindowSize(window, windowSize, windowSize + 1);
       engine.mouseCaptured = 1;
       glfwSetCursorPos(window, windowSize[0] / 2.0, windowSize[1] / 2.0);
-    } else if (!getKey(window, GLFW_KEY_F))
+    } else {
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
       engine.mouseCaptured = 0;
-
-    handleCameraMovement(camera);
-
-    float rotation[9];
-    getRotationMatrix(camera->rotation.yaw, camera->rotation.pitch,
-                      camera->rotation.roll, rotation);
-
-    glUniformMatrix3fv(camera->uRot, 1, GL_FALSE, rotation);
-
-    glUniform3f(                  //
-        camera->uPos,             //
-        camera->position.x / 100, //
-        camera->position.y / 100, //
-        camera->position.z / 100  //
-    );
+    }
 
     glfwSwapBuffers(window);
-
+    if (glfwGetTime() - lastMeasure > 1) {
+      printf("FPS: %d\n", fps);
+      lastMeasure = glfwGetTime();
+      fps = 0;
+    }
+    else ++fps;
     glfwPollEvents();
   }
 
