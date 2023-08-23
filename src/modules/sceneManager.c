@@ -20,7 +20,7 @@ void loadDefaultScene() {
   createFullShader(&shader, "assets/shaders/default.vert",
                    "assets/shaders/default.frag", NULL);
 
-  Cuboid *cuboid = newCuboid(0.5, 0.5, 1);
+  initCuboid();
   Camera *camera = newCamera();
 
   camera->uPos = glGetUniformLocation(shader, "uCameraPos");
@@ -32,7 +32,7 @@ void loadDefaultScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shader);
-    drawCuboid(cuboid);
+    drawCuboid();
 
     if (getKey(window, GLFW_KEY_F) && !engine.mouseCaptured) {
       int windowSize[2];
@@ -62,7 +62,7 @@ void loadDefaultScene() {
     glfwPollEvents();
   }
 
-  destroyCuboid(cuboid);
+  terminateCuboid();
   destroyCamera(camera);
 
   glUseProgram(0);
