@@ -35,13 +35,16 @@ void loadDefaultScene() {
     handleCameraMovement(camera);
 
     // Center cursor if mouseCaptured
-    if (getKey(window, GLFW_KEY_F)) {
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT)) {
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
       int windowSize[2];
       glfwGetWindowSize(window, windowSize, windowSize + 1);
       engine.mouseCaptured = 1;
       glfwSetCursorPos(window, windowSize[0] / 2.0, windowSize[1] / 2.0);
-    } else
+    } else {
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
       engine.mouseCaptured = 0;
+    }
 
     glfwSwapBuffers(window);
     glfwPollEvents();
