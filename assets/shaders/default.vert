@@ -22,38 +22,11 @@ vec3 rotate(vec3 pos, int InstanceID);
 void main() {
   InstanceID = gl_InstanceID;
 
-  vec3 rotated = rotate(aPos, InstanceID);
-  vec3 relativePos = (rotated - uCameraPosition + //
-                      vec3(1.4, 0, 0) * (InstanceID % 50) +
-                      vec3(0, 0, 1.4) * ((InstanceID / 50) % 50) +
-                      vec3(0, 1.4, 0) * (InstanceID / 2500)) *
-                     uCameraRotation;
+  vec3 relativePos = (aPos - uCameraPosition) * uCameraRotation;
 
   vec4 view = vec4(relativePos.xy, relativePos.z / 100.0,
                    1 + perspectiveZ * relativePos.z);
   vec4 renderPos = vec4(view.x * wRatio, view.yzw);
   gl_Position = renderPos;
   fragPos = aPos + vec3(0.5);
-}
-
-vec3 rotate(vec3 pos, int InstanceID) {
-  float yaw = (InstanceID % 50) * uTime;
-  float pitch = ((InstanceID / 50) % 50) * uTime;
-  float roll = (InstanceID / 2500) * uTime;
-
-  float sinYaw = sin(radians(yaw));
-  float cosYaw = cos(radians(yaw));
-  float sinPitch = sin(radians(pitch));
-  float cosPitch = cos(radians(pitch));
-  float sinRoll = sin(radians(roll));
-  float cosRoll = cos(radians(roll));
-
-  mat3 yawRotation = mat3(cosYaw, 0, sinYaw, 0, 1, 0, -sinYaw, 0, cosYaw);
-  mat3 pitchRotation =
-      mat3(1, 0, 0, 0, cosPitch, -sinPitch, 0, sinPitch, cosPitch);
-  mat3 rollRotation = mat3(cosRoll, -sinRoll, 0, sinRoll, cosRoll, 0, 0, 0, 1);
-
-  vec3 rotated = yawRotation * pitchRotation * rollRotation * pos;
-
-  return rotated;
 }

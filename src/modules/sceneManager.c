@@ -20,7 +20,6 @@ void loadDefaultScene() {
 
   initCuboid();
   Camera *camera = newCamera();
-  camera->position.y = 100;
   bindCamera(shader, camera);
 
   glEnable(GL_DEPTH_TEST);
@@ -42,7 +41,8 @@ void loadDefaultScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shader);
-    drawCuboidsInstanced(125000);
+    // drawCuboidsInstanced(125000);
+    drawCuboid();
 
     handleCameraMovement(camera);
 
@@ -63,8 +63,8 @@ void loadDefaultScene() {
       printf("FPS: %d\n", fps);
       lastMeasure = glfwGetTime();
       fps = 0;
-    }
-    else ++fps;
+    } else
+      ++fps;
     glfwPollEvents();
   }
 
