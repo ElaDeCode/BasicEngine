@@ -10,10 +10,9 @@
 #include <stdio.h>
 
 extern Engine engine;
-Window window;
 
 void loadDefaultScene() {
-  window = engine.window;
+  Window window = engine.window;
 
   unsigned int shader;
   createFullShader(&shader, "assets/shaders/default.vert",
@@ -29,12 +28,21 @@ void loadDefaultScene() {
   glCullFace(GL_BACK);
   double lastMeasure = glfwGetTime();
   int fps = 0;
+
+  unsigned int uResolution = glGetUniformLocation(shader, "uResolution");
+  unsigned int uTime = glGetUniformLocation(shader, "uTime");
   while (!glfwWindowShouldClose(engine.window)) {
+    int windowSize[2];
+    glfwGetWindowSize(window, windowSize, windowSize + 1);
+    glUniform2i(uResolution, windowSize[0], windowSize[1]);
+
+    glUniform1f(uTime, (float)glfwGetTime());
+
     glClearColor(0.1, 0.15, 0.2, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shader);
-    drawCuboidsInstanced(30000);
+    drawCuboidsInstanced(125000);
 
     handleCameraMovement(camera);
 
