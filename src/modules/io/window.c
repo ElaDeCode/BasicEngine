@@ -18,9 +18,14 @@ inline Window createWindow(int width, int height, const char *title) {
   }
   glfwSetWindowAttrib(window, GLFW_RESIZABLE, 1);
   glfwMakeContextCurrent(window);
+
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
   return window;
 }
 
-inline void destroyWindow(Window window) {
-  glfwDestroyWindow(window);
+inline void destroyWindow(Window window) { glfwDestroyWindow(window); }
+
+void framebuffer_size_callback(Window window, int width, int height) {
+  glViewport(0, 0, width, height);
 }
