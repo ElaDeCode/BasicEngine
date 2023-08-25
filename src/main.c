@@ -3,7 +3,6 @@
 #include "modules/sceneManager.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 
 #define WIDTH 800
 #define HEIGHT 600

@@ -1,6 +1,5 @@
 #include "cuboid.h"
 #include "glad/gl.h"
-#include <stdlib.h>
 
 static unsigned int cuboidVAO;
 static unsigned int cuboidIBO;

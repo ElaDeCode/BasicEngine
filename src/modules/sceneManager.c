@@ -20,7 +20,6 @@ void loadDefaultScene() {
 
   initCuboid();
   Camera *camera = newCamera();
-  camera->position.y = 100;
   bindCamera(shader, camera);
 
   glEnable(GL_DEPTH_TEST);
@@ -31,9 +30,9 @@ void loadDefaultScene() {
 
   unsigned int uResolution = glGetUniformLocation(shader, "uResolution");
   unsigned int uTime = glGetUniformLocation(shader, "uTime");
-  while (!glfwWindowShouldClose(engine.window)) {
+  while (!windowShouldClose(window)) {
     int windowSize[2];
-    glfwGetWindowSize(window, windowSize, windowSize + 1);
+    getWindowSize(window, windowSize, windowSize + 1);
     glUniform2i(uResolution, windowSize[0], windowSize[1]);
 
     glUniform1f(uTime, (float)glfwGetTime());
@@ -42,30 +41,30 @@ void loadDefaultScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shader);
-    drawCuboidsInstanced(125000);
+    // drawCuboidsInstanced(125000);
+    drawCuboid();
 
     handleCameraMovement(camera);
 
     // Center cursor if mouseCaptured
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT)) {
-      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-      int windowSize[2];
-      glfwGetWindowSize(window, windowSize, windowSize + 1);
+    if (getMouseButton(window, GLFW_MOUSE_BUTTON_LEFT)) {
+      setInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+      getWindowSize(window, windowSize, windowSize + 1);
       engine.mouseCaptured = 1;
-      glfwSetCursorPos(window, windowSize[0] / 2.0, windowSize[1] / 2.0);
+      setCursorPos(window, windowSize[0] / 2.0, windowSize[1] / 2.0);
     } else {
-      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+      setInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
       engine.mouseCaptured = 0;
     }
 
-    glfwSwapBuffers(window);
+    swapBuffers(window);
     if (glfwGetTime() - lastMeasure > 1) {
       printf("FPS: %d\n", fps);
       lastMeasure = glfwGetTime();
       fps = 0;
-    }
-    else ++fps;
-    glfwPollEvents();
+    } else
+      ++fps;
+    pollEvents();
   }
 
   terminateCuboid();

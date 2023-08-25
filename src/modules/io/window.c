@@ -29,3 +29,39 @@ inline void destroyWindow(Window window) { glfwDestroyWindow(window); }
 void framebuffer_size_callback(Window window, int width, int height) {
   glViewport(0, 0, width, height);
 }
+
+inline void getWindowSize(Window window, int *width, int *height) {
+  glfwGetWindowSize(window, width, height);
+}
+
+inline void setWindowSize(Window window, int width, int height) {
+  glfwSetWindowSize(window, width, height);
+}
+
+inline void setWindowTitle(Window window, const char *title) {
+  glfwSetWindowTitle(window, title);
+}
+
+inline void setInputMode(Window window, int mode, int value) {
+  glfwSetInputMode(window, mode, value);
+}
+
+inline int windowShouldClose(Window window) {
+  return glfwWindowShouldClose(window);
+}
+
+inline void pollEvents() { glfwPollEvents(); }
+
+inline void swapBuffers(Window window) { glfwSwapBuffers(window); }
+
+inline void getCursorPos(Window window, double *x, double *y) {
+  glfwGetCursorPos(window, x, y);
+}
+
+inline void setCursorPos(Window window, double x, double y) {
+  glfwSetCursorPos(window, x, y);
+}
+
+inline int getMouseButton(Window window, int button) {
+  glfwGetMouseButton(window, button);
+}

@@ -79,3 +79,10 @@ build/CMakeFiles/elangine.dir/compiler_depend.internal
 .vscode/settings.json
 build/CMakeFiles/elangine.dir/src/math/scaler.c.o
 build/CMakeFiles/elangine.dir/src/math/scaler.c.o.d
+build/build.ninja
+build/glfw3.dll
+build/CMakeFiles/rules.ninja
+build/assets/shaders/cubeFromInstances.vert
+build/.ninja_deps
+build/.ninja_log
+build/CMakeFiles/elangine.dir/src/math/matrix.c.o

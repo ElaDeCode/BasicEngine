@@ -1,1 +1,1 @@
-target_sources(${PROJECT_NAME} PRIVATE linearAlgebra.c scaler.c)
+target_sources(${PROJECT_NAME} PRIVATE matrix.c scaler.c)
