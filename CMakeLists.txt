@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27.1)
+cmake_minimum_required(VERSION 3.26.1)
 
 project(elangine)
 
@@ -16,3 +16,5 @@ add_compile_options(-Wall -Werror -Wno-error=maybe-uninitialized)
 set(ASSETS_SOURCE_DIR ${CMAKE_SOURCE_DIR}/assets)
 set(ASSETS_DEST_DIR ${CMAKE_BINARY_DIR})
 file(COPY ${ASSETS_SOURCE_DIR} DESTINATION ${ASSETS_DEST_DIR})
+
+configure_file(${CMAKE_SOURCE_DIR}/dll/glfw3.dll ${CMAKE_BINARY_DIR} COPYONLY)

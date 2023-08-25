@@ -1,4 +1,4 @@
-#include "linearAlgebra.h"
+#include "matrix.h"
 
 void mat3Mult(float a[9], float b[9], float result[9]) {
   register int i, j, k, tmp;

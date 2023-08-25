@@ -1,5 +1,5 @@
 #include "transform.h"
-#include "math/linearAlgebra.h"
+#include "math/matrix.h"
 #include <math.h>
 
 void getRotationMatrix(float yaw, float pitch, float roll, float result[9]) {
