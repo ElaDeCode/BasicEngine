@@ -1,23 +1,25 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-typedef struct vec3 {
-  float x, y, z;
-} vec3;
+#define X 0
+#define Y 1
+#define Z 2
+#define W 3
 
-typedef vec3 Position;
-typedef vec3 Scale;
+#define PITCH 0
+#define YAW 1
+#define ROLL 2
 
-typedef struct Rotation {
-  float yaw, pitch, roll;
-} Rotation;
+typedef float vec2[2];
+typedef float vec3[3];
+typedef float vec4[4];
 
-void getRotationMatrix(float yaw, float pitch, float roll, float result[9]);
+void getRotationMatrix(float pitch, float yaw, float roll, float result[9]);
 
-void getForward(float rotation[3], float direction[3]);
-void getRight(float rotation[3], float right[3]);
-void getUp(float rotation[3], float up[3]);
+void getForward(vec3 rotation, vec3 direction);
+void getRight(vec3 rotation, vec3 right);
+void getUp(vec3 rotation, vec3 up);
 
-void translate(float position[3], float vector[3]);
+void translate(vec3 position, vec3 vector);
 
 #endif

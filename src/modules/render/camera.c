@@ -19,26 +19,26 @@ inline void handleCameraMovement(Camera *camera) {
 
   // Get input direction
   vec3 movementDir;
-  movementDir.x = getAxis(window, GLFW_KEY_D, GLFW_KEY_A);
-  movementDir.y = getAxis(window, GLFW_KEY_E, GLFW_KEY_Q);
-  movementDir.z = getAxis(window, GLFW_KEY_W, GLFW_KEY_S);
+  movementDir[X] = getAxis(window, GLFW_KEY_D, GLFW_KEY_A);
+  movementDir[Y] = getAxis(window, GLFW_KEY_E, GLFW_KEY_Q);
+  movementDir[Z] = getAxis(window, GLFW_KEY_W, GLFW_KEY_S);
 
   // Calculate relative directions
   vec3 forward, right, up;
-  getRight((float *)&camera->rotation, (float *)&right);
-  getUp((float *)&camera->rotation, (float *)&up);
-  getForward((float *)&camera->rotation, (float *)&forward);
+  getRight(camera->rotation, right);
+  getUp(camera->rotation, up);
+  getForward(camera->rotation, forward);
   // getRelativeAxis((float*)camera->rotation,(float*)&right,(float*)&up,(float*)&forward);
 
   // Scale relative directions with movementSpeed
-  scaleArray((float *)&right, movementDir.x * movementSpeed, 3);
-  scaleArray((float *)&up, movementDir.y * movementSpeed, 3);
-  scaleArray((float *)&forward, movementDir.z * movementSpeed, 3);
+  scaleArray(right, movementDir[X] * movementSpeed, 3);
+  scaleArray(up, movementDir[Y] * movementSpeed, 3);
+  scaleArray(forward, movementDir[Z] * movementSpeed, 3);
 
   // Move camera on relative directions with movementSpeed
-  translate((float *)&camera->position, (float *)&right);
-  translate((float *)&camera->position, (float *)&up);
-  translate((float *)&camera->position, (float *)&forward);
+  translate(camera->position, right);
+  translate(camera->position, up);
+  translate(camera->position, forward);
 
   // Handle captured mouse movement
   if (engine.mouseCaptured) {
@@ -49,25 +49,25 @@ inline void handleCameraMovement(Camera *camera) {
     glfwGetCursorPos(window, cursorPos, cursorPos + 1);
 
     // Adjust camera rotation based on mouse movement
-    camera->rotation.yaw +=
-        (cursorPos[0] - windowSize[0] / 2.0) * mouseSensivity;
-    camera->rotation.pitch +=
-        (windowSize[1] / 2.0 - cursorPos[1]) * mouseSensivity;
+    camera->rotation[YAW] +=
+        (cursorPos[X] - windowSize[X] / 2.0) * mouseSensivity;
+    camera->rotation[PITCH] +=
+        (windowSize[Y] / 2.0 - cursorPos[Y]) * mouseSensivity;
   }
 
   // Calcute rotation matrix for shader
   float rotation[9];
-  getRotationMatrix(camera->rotation.yaw, camera->rotation.pitch, camera->rotation.roll, rotation);
+  getRotationMatrix(camera->rotation[PITCH], camera->rotation[YAW], camera->rotation[ROLL], rotation);
 
   // Pass rotation matrix to shader
   glUniformMatrix3fv(camera->uRot, 1, GL_FALSE, rotation);
 
   // Pass position to shader
-  glUniform3f(            //
-      camera->uPos,       //
-      camera->position.x, //
-      camera->position.y, //
-      camera->position.z  //
+  glUniform3f(             //
+      camera->uPos,        //
+      camera->position[X], //
+      camera->position[Y], //
+      camera->position[Z]  //
   );
 }
 
