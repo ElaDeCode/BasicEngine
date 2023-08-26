@@ -4,8 +4,8 @@
 #include "objects/transform.h"
 
 typedef struct Camera {
-  Position position;
-  Rotation rotation;
+  vec3 position;
+  vec3 rotation;
   int uPos;
   int uRot;
 } Camera;
