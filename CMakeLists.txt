@@ -1,16 +1,17 @@
 cmake_minimum_required(VERSION 3.26.1)
 
-project(elangine)
+project(elangine C CXX)
 
 include_directories(src)
 
 find_package(glfw3)
+find_package(glm)
 
 add_executable(${PROJECT_NAME} src/main.c)
 
 add_subdirectory(src)
 
-target_link_libraries(${PROJECT_NAME} glfw m)
+target_link_libraries(${PROJECT_NAME} glfw m glm)
 add_compile_options(-Wall -Werror -Wno-error=maybe-uninitialized)
 
 set(ASSETS_SOURCE_DIR ${CMAKE_SOURCE_DIR}/assets)

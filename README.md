@@ -11,6 +11,7 @@ CMake is configured. If the project gains traction, I'll provide detailed instal
 
 # dependencies:
   glfw3
+  cglm
 
 # Engine is capable of:
   - Hard coded scene

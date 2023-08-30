@@ -1,79 +1,93 @@
+// camera.c
+
 #include "camera.h"
 #include "engine.h"
 #include "glad/gl.h"
-#include "math/scaler.h"
 #include "modules/io/keyHandle.h"
-#include "stdlib.h"
+#include "modules/io/keys.h"
+#include "objects/transform.h"
+
+#include <cglm/clipspace/persp_lh_no.h>
+#include <stdlib.h>
 
 extern Engine engine;
 
-Camera *newCamera() { return calloc(1, sizeof(Camera)); }
-
-inline void handleCameraMovement(Camera *camera) {
-  // todo add a function to change movement speed
-  float movementSpeed = 0.1;
-  float mouseSensivity = 0.01;
-
-  // Get main window
+Camera *newCamera() {
+  Camera *camera = (Camera *)malloc(sizeof(Camera));
   Window window = engine.window;
 
-  // Get input direction
-  vec3 movementDir;
-  movementDir[X] = getAxis(window, GLFW_KEY_D, GLFW_KEY_A);
-  movementDir[Y] = getAxis(window, GLFW_KEY_E, GLFW_KEY_Q);
-  movementDir[Z] = getAxis(window, GLFW_KEY_W, GLFW_KEY_S);
+  camera->fov = 45;
+  camera->sensivity = 0.001;
+  camera->speed = 0.1;
 
-  // Calculate relative directions
-  vec3 forward, right, up;
-  getRight(camera->rotation, right);
-  getUp(camera->rotation, up);
-  getForward(camera->rotation, forward);
-  // getRelativeAxis((float*)camera->rotation,(float*)&right,(float*)&up,(float*)&forward);
+  glm_vec3_copy((vec3){0, 0, 0}, camera->rotation);
+  glm_vec3_copy((vec3){0, 0, 3}, camera->position);
 
-  // Scale relative directions with movementSpeed
-  scaleArray(right, movementDir[X] * movementSpeed, 3);
-  scaleArray(up, movementDir[Y] * movementSpeed, 3);
-  scaleArray(forward, movementDir[Z] * movementSpeed, 3);
+  glm_perspective_lh_no(
+      camera->fov, (float)engine.windowSize[0] / (float)engine.windowSize[1],
+      0.1, 100, camera->projection);
 
-  // Move camera on relative directions with movementSpeed
-  translate(camera->position, right);
-  translate(camera->position, up);
-  translate(camera->position, forward);
+  glm_mat4_identity(camera->view);
 
-  // Handle captured mouse movement
+  glm_translate(camera->view, camera->position);
+
+  glm_mat4_mul(camera->projection, camera->view, camera->view);
+  return camera;
+}
+
+void updateCamera(Camera *camera) {
+  handleCameraMovement(camera);
+  glUniformMatrix4fv(camera->uProjection, 1, GL_FALSE, (float *)camera->view);
+}
+
+void handleCameraMovement(Camera *camera) {
   if (engine.mouseCaptured) {
-    int windowSize[2];
-    glfwGetWindowSize(window, windowSize, windowSize + 1);
+    glm_mat4_identity(camera->view);
 
-    double cursorPos[2];
-    glfwGetCursorPos(window, cursorPos, cursorPos + 1);
+    camera->rotation[PITCH] += engine.mouseDelta[1] * camera->sensivity;
+    camera->rotation[YAW] += engine.mouseDelta[0] * camera->sensivity;
 
-    // Adjust camera rotation based on mouse movement
-    camera->rotation[YAW] +=
-        (cursorPos[X] - windowSize[X] / 2.0) * mouseSensivity;
-    camera->rotation[PITCH] +=
-        (windowSize[Y] / 2.0 - cursorPos[Y]) * mouseSensivity;
+    glm_rotate(camera->view, camera->rotation[PITCH], (vec3){1, 0, 0});
+    glm_rotate(camera->view, camera->rotation[YAW], (vec3){0, 1, 0});
+    glm_rotate(camera->view, camera->rotation[ROLL], (vec3){0, 0, 1});
+
+    // glm_vec3_copy(camera->view[0], camera->right);
+
+    camera->right[0] = camera->view[0][0];
+    camera->right[1] = camera->view[1][0];
+    camera->right[2] = camera->view[2][0];
+
+    camera->up[0] = camera->view[0][1];
+    camera->up[1] = camera->view[1][1];
+    camera->up[2] = camera->view[2][1];
+
+    camera->forward[0] = camera->view[0][2];
+    camera->forward[1] = camera->view[1][2];
+    camera->forward[2] = camera->view[2][2];
+
+    vec3 movement = {0, 0, 0};
+    glm_vec3_muladds(camera->forward,
+                     -getAxis(engine.window, KEY_W, KEY_S) * camera->speed,
+                     movement);
+    glm_vec3_muladds(camera->right,
+                     -getAxis(engine.window, KEY_D, KEY_A) * camera->speed,
+                     movement);
+    glm_vec3_muladds(camera->up,
+                     -getAxis(engine.window, KEY_SPACE, KEY_LEFT_SHIFT) *
+                         camera->speed,
+                     movement);
+
+    // add movement to position
+    glm_vec3_add(camera->position, movement, camera->position);
+    // move camera
+    glm_translate(camera->view, camera->position);
+    // merge projection and view matrix
+    glm_mat4_mul(camera->projection, camera->view, camera->view);
   }
-
-  // Calcute rotation matrix for shader
-  float rotation[9];
-  getRotationMatrix(camera->rotation[PITCH], camera->rotation[YAW], camera->rotation[ROLL], rotation);
-
-  // Pass rotation matrix to shader
-  glUniformMatrix3fv(camera->uRot, 1, GL_FALSE, rotation);
-
-  // Pass position to shader
-  glUniform3f(             //
-      camera->uPos,        //
-      camera->position[X], //
-      camera->position[Y], //
-      camera->position[Z]  //
-  );
 }
 
-inline void bindCamera(unsigned int shader, Camera *camera) {
-  camera->uPos = glGetUniformLocation(shader, "uCameraPosition");
-  camera->uRot = glGetUniformLocation(shader, "uCameraRotation");
+void bindCamera(Camera *camera) {
+  camera->uProjection = glGetUniformLocation(camera->shader, "projection");
 }
 
-inline void destroyCamera(Camera *camera) { free(camera); }
+void destroyCamera(Camera *camera) { free(camera); }

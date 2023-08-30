@@ -28,6 +28,7 @@ int main() {
 void initEngine() {
   glfwInit();
   engine.window = createWindow(WIDTH, HEIGHT, TITLE);
+  getWindowSize(engine.window, engine.windowSize, engine.windowSize + 1);
   initOpenGL();
 }
 
