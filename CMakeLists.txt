@@ -13,6 +13,7 @@ add_subdirectory(src)
 
 target_link_libraries(${PROJECT_NAME} glfw m)
 add_compile_options(-Wall -Werror -Wno-error=maybe-uninitialized)
+add_compile_definitions(CGLM_FORCE_LEFT_HANDED)
 
 set(ASSETS_SOURCE_DIR ${CMAKE_SOURCE_DIR}/assets)
 set(ASSETS_DEST_DIR ${CMAKE_BINARY_DIR})

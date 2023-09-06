@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "engine.h"
+
 inline Window createWindow(int width, int height, const char *title) {
   Window window;
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -29,6 +31,9 @@ inline void destroyWindow(Window window) { glfwDestroyWindow(window); }
 
 void framebufferSizeCallback(Window window, int width, int height) {
   glViewport(0, 0, width, height);
+  extern Engine engine;
+  engine.windowSize[0] = width;
+  engine.windowSize[1] = height;
 }
 
 inline void getWindowSize(Window window, int *width, int *height) {

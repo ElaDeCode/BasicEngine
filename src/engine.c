@@ -13,8 +13,8 @@ void updateEngine() {
   engine.mouseCaptured = getMouseButton(engine.window, MOUSE_BUTTON_LEFT);
   // get mouse delta
   getCursorPos(engine.window, mousePos, mousePos + 1);
-  engine.mouseDelta[0] = mousePos[0] - engine.mousePos[0];
-  engine.mouseDelta[1] = mousePos[1] - engine.mousePos[1];
+  engine.mouseDelta[0] = engine.mousePos[0] - mousePos[0];
+  engine.mouseDelta[1] = engine.mousePos[1] - mousePos[1];
   engine.mousePos[0] = mousePos[0];
   engine.mousePos[1] = mousePos[1];
 
