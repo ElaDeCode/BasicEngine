@@ -5,11 +5,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "engine.h"
+
 inline Window createWindow(int width, int height, const char *title) {
   Window window;
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
   glfwWindowHint(GLFW_RESIZABLE, 0);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   window = glfwCreateWindow(width, height, title, 0, 0);
   if (window == NULL) {
     glfwTerminate();
@@ -19,15 +22,18 @@ inline Window createWindow(int width, int height, const char *title) {
   glfwSetWindowAttrib(window, GLFW_RESIZABLE, 1);
   glfwMakeContextCurrent(window);
 
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
   return window;
 }
 
 inline void destroyWindow(Window window) { glfwDestroyWindow(window); }
 
-void framebuffer_size_callback(Window window, int width, int height) {
+void framebufferSizeCallback(Window window, int width, int height) {
   glViewport(0, 0, width, height);
+  extern Engine engine;
+  engine.windowSize[0] = width;
+  engine.windowSize[1] = height;
 }
 
 inline void getWindowSize(Window window, int *width, int *height) {
@@ -64,4 +70,8 @@ inline void setCursorPos(Window window, double x, double y) {
 
 inline int getMouseButton(Window window, int button) {
   glfwGetMouseButton(window, button);
+}
+
+inline void swapInterwal(int interval) {
+  glfwSwapInterval(interval);
 }

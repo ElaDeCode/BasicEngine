@@ -28,6 +28,7 @@ int main() {
 void initEngine() {
   glfwInit();
   engine.window = createWindow(WIDTH, HEIGHT, TITLE);
+  getWindowSize(engine.window, engine.windowSize, engine.windowSize + 1);
   initOpenGL();
 }
 
@@ -41,6 +42,7 @@ void initOpenGL() {
   int version = gladLoaderLoadGL();
   if (version == 0) {
     printf("error: cannot load opengl\n");
+    exit(1);
   }
   glViewport(0, 0, WIDTH, HEIGHT);
 }

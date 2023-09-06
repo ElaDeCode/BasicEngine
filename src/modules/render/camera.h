@@ -1,18 +1,32 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "objects/transform.h"
+#include <cglm/cglm.h>
 
 typedef struct Camera {
-  vec3 position;
+
+  float fov;
+  float sensivity;
+  float speed;
   vec3 rotation;
-  int uPos;
-  int uRot;
+  vec3 position;
+
+  vec3 right;
+  vec3 up;
+  vec3 forward;
+
+  mat4 projection;
+  mat4 view;
+
+  unsigned int shader;
+  int uProjection;
+
 } Camera;
 
 Camera *newCamera();
 void handleCameraMovement(Camera *camera);
-void bindCamera(unsigned int shader, Camera *camera);
+void updateCamera(Camera *camera);
+void bindCamera(Camera *camera);
 void destroyCamera(Camera *camera);
 
-#endif
+#endif // CAMERA_H
