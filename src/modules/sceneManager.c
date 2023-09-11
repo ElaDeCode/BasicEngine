@@ -10,14 +10,16 @@
 #include "glad/gl.h"
 #include <stdio.h>
 
+#define DEFAULT_VERT "assets/shaders/cubeFromInstances.vert"
+#define DEFAULT_FRAG "assets/shaders/bloom.frag"
+
 extern Engine engine;
 
 void loadDefaultScene() {
   Window window = engine.window;
 
   unsigned int shader;
-  createFullShader(&shader, "assets/shaders/default.vert",
-                   "assets/shaders/default.frag", NULL);
+  createFullShader(&shader, DEFAULT_VERT, DEFAULT_FRAG, NULL);
 
   initCuboid();
   Camera *camera = newCamera();
@@ -36,16 +38,15 @@ void loadDefaultScene() {
     int windowSize[2];
     getWindowSize(window, windowSize, windowSize + 1);
 
-    updateCamera(camera);
-
     glUniform1f(uTime, (float)glfwGetTime());
 
     glClearColor(0.1, 0.15, 0.2, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shader);
-    // drawCuboidsInstanced(125000);
-    drawCuboid();
+    drawCuboidsInstanced(125000);
+    // drawCuboid();
+    updateCamera(camera);
 
     swapBuffers(window);
 
@@ -54,17 +55,15 @@ void loadDefaultScene() {
       printf("FPS: %d\n", fps);
       lastMeasure = engine.time;
       fps = 0;
-      createFullShader(&shader, "assets/shaders/default.vert",
-                       "assets/shaders/default.frag", NULL);
+      createFullShader(&shader, DEFAULT_VERT, DEFAULT_FRAG, NULL);
       camera->shader = shader;
       updateCamera(camera);
     } else
       ++fps;
 
-    updateEngine();
-
     //* poll events
     pollEvents();
+    updateEngine();
   }
 
   terminateCuboid();

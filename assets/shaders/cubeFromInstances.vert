@@ -3,43 +3,32 @@
 layout(location = 0) in vec3 aPos;
 
 out vec3 fragPos;
+out vec3 vertPos;
 
-uniform float uTime = 0.0001;
-uniform ivec2 uResolution;
-uniform vec3 uPos = vec3(0);
-uniform vec3 uCameraPosition = vec3(0);
-uniform mat3 uCameraRotation = mat3(1, 0, 0, //
-                                    0, 1, 0, //
-                                    0, 0, 1);
+uniform float time = 0.0001;
+uniform mat4 projection;
+uniform mat4 model;
 
 flat out int InstanceID;
 
-float wRatio = float(uResolution.y) / float(uResolution.x);
-float perspectiveZ = 0.7;
-
 vec3 rotate(vec3 pos, int InstanceID);
+
+vec3 instanceOffset;
 
 void main() {
   InstanceID = gl_InstanceID;
-
-  vec3 rotated = rotate(aPos, InstanceID);
-  vec3 relativePos = (rotated - uCameraPosition + //
-                      vec3(1.4, 0, 0) * (InstanceID % 50) +
-                      vec3(0, 0, 1.4) * ((InstanceID / 50) % 50) +
-                      vec3(0, 1.4, 0) * (InstanceID / 2500)) *
-                     uCameraRotation;
-
-  vec4 view = vec4(relativePos.xy, relativePos.z / 100.0,
-                   1 + perspectiveZ * relativePos.z);
-  vec4 renderPos = vec4(view.x * wRatio, view.yzw);
-  gl_Position = renderPos;
+  instanceOffset =
+      vec3((InstanceID % 50), ((InstanceID / 50) % 50), (InstanceID / 2500));
+  vec3 pos = rotate(aPos + instanceOffset * 1, InstanceID);
+  gl_Position = projection * vec4(pos, 1);
   fragPos = aPos + vec3(0.5);
+  vertPos = pos;
 }
 
 vec3 rotate(vec3 pos, int InstanceID) {
-  float yaw = (InstanceID % 50) * uTime;
-  float pitch = ((InstanceID / 50) % 50) * uTime;
-  float roll = (InstanceID / 2500) * uTime;
+  float yaw = instanceOffset.x * time * 0.001;
+  float pitch = instanceOffset.y * time * 0.1;
+  float roll = instanceOffset.z * time * 0.1;
 
   float sinYaw = sin(radians(yaw));
   float cosYaw = cos(radians(yaw));
