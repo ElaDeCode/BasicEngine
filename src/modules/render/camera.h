@@ -8,6 +8,8 @@ typedef struct Camera {
   float fov;
   float sensivity;
   float speed;
+  float far;
+  float near;
   vec3 rotation;
   vec3 position;
 
@@ -17,6 +19,7 @@ typedef struct Camera {
 
   mat4 projection;
   mat4 view;
+  mat4 camera;
 
   unsigned int shader;
   int uProjection;

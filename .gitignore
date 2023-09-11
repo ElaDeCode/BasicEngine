@@ -120,3 +120,9 @@ build/CMakeFiles/3.27.4/CompilerIdC/CMakeCCompilerId.c
 build/CMakeFiles/3.27.4/CompilerIdCXX/a.out
 build/CMakeFiles/3.27.4/CompilerIdCXX/CMakeCXXCompilerId.cpp
 build/CMakeFiles/elangine.dir/src/engine.c.o
+build/CMakeFiles/elangine.dir/src/objects/quad.c.o
+build/assets/shaders/blend.frag
+build/assets/shaders/bloom.frag
+build/assets/shaders/flat.frag
+build/assets/shaders/flat.vert
+build/assets/shaders/gussianBlur.frag

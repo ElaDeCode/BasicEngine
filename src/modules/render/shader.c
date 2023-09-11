@@ -15,7 +15,7 @@ int createFullShader(unsigned int *shaderProgram, const char *vertPath,
   *shaderProgram = glCreateProgram();
 
   /* add shaders */
-  if (fragPath != NULL) {
+  if (vertPath != NULL) {
     attachShaderToProgram(*shaderProgram, vertPath, GL_VERTEX_SHADER);
   }
   if (fragPath != NULL) {
@@ -29,7 +29,8 @@ int createFullShader(unsigned int *shaderProgram, const char *vertPath,
   glGetProgramiv(*shaderProgram, GL_LINK_STATUS, &success);
   if (!success) {
     glGetProgramInfoLog(*shaderProgram, 512, NULL, infoLog);
-    printf("shaderProgram LINK_FAILED\n");
+    printf("shaderProgram LINK_FAILED:\n");
+    printf("\t%s\n", infoLog);
   }
   glUseProgram(*shaderProgram);
   return 1;
