@@ -2,10 +2,9 @@ cmake_minimum_required(VERSION 3.26.1)
 
 project(elangine)
 
-include_directories(src)
+include_directories(src src/libs)
 
 find_package(glfw3)
-find_package(cglm)
 
 add_executable(${PROJECT_NAME} src/main.c)
 

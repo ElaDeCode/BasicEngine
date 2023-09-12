@@ -1,6 +1,6 @@
 #include "shader.h"
 #include "glad/gl.h"
-#include "modules/io/fileManager.h"
+#include "resource/fileManager.h"
 #include <stdio.h>
 #include <stdlib.h>
 

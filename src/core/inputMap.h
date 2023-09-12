@@ -1,13 +1,12 @@
-#ifndef INPUT_H
-#define INPUT_H
-
-//! this header also contains mouse buttons
+#ifndef INPUT_MAP_H
+#define INPUT_MAP_H
 
 /* even though all the keys are defined in GLFW, I'm defining them here
   because I don't want to include GLFW in every file that needs to use
   the keys. This is also usefull if I ever decide change the glfw with
   another library */
 
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #define MOUSE_BUTTON_LEFT GLFW_MOUSE_BUTTON_LEFT
@@ -138,4 +137,4 @@
 #define KEY_UNKNOWN GLFW_KEY_UNKNOWN
 #define KEY_LAST GLFW_KEY_LAST
 
-#endif // KEYS_H
+#endif // INPUT_MAP_H

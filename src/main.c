@@ -1,8 +1,9 @@
-#include "engine.h"
-#include "modules/io/window.h"
-#include "modules/sceneManager.h"
+#include "core/engine.h"
+#include "core/window.h"
+#include "scene/sceneManager.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #define WIDTH 800
 #define HEIGHT 600

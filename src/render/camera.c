@@ -1,11 +1,11 @@
 // camera.c
 
 #include "camera.h"
-#include "engine.h"
+#include "core/engine.h"
 #include "glad/gl.h"
-#include "modules/io/keyHandle.h"
-#include "modules/io/keys.h"
-#include "objects/transform.h"
+#include "core/keyHandle.h"
+#include "core/inputMap.h"
+#include "object/transform.h"
 
 // CGLM_FORCE_LEFT_HANDED is defined
 #include <cglm/clipspace/persp_lh_no.h>

@@ -72,6 +72,4 @@ inline int getMouseButton(Window window, int button) {
   glfwGetMouseButton(window, button);
 }
 
-inline void swapInterwal(int interval) {
-  glfwSwapInterval(interval);
-}
+inline void swapInterwal(int interval) { glfwSwapInterval(interval); }
