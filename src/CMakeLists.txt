@@ -1,4 +1,5 @@
-target_sources(${PROJECT_NAME} PRIVATE gl.c engine.c)
-
-add_subdirectory(modules)
-add_subdirectory(objects)
+add_subdirectory(core)
+add_subdirectory(scene)
+add_subdirectory(resource)
+add_subdirectory(render)
+add_subdirectory(object)

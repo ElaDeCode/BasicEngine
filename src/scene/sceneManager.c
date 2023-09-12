@@ -1,17 +1,16 @@
-#include "engine.h"
-#include "io/keyHandle.h"
-#include "io/window.h"
-#include "modules/io/keys.h"
-#include "modules/render/shader.h"
-#include "objects/cuboid.h"
+#include "core/engine.h"
+#include "core/inputMap.h"
+#include "core/keyHandle.h"
+#include "core/window.h"
+#include "object/cuboid.h"
 #include "render/camera.h"
-#include "scene.h"
+#include "render/shader.h"
 
 #include "glad/gl.h"
 #include <stdio.h>
 
 #define DEFAULT_VERT "assets/shaders/cubeFromInstances.vert"
-#define DEFAULT_FRAG "assets/shaders/bloom.frag"
+#define DEFAULT_FRAG "assets/shaders/default.frag"
 
 extern Engine engine;
 

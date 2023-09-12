@@ -8,7 +8,7 @@ layout(location = 1) out vec4 BrightColor;
 
 void main() {
 
-  FragColor = vec4(vertPos / (50 * 1.4), 1);
+  FragColor = vec4(vertPos / (50 * 1), 1);
 
   // check whether fragment output is higher than threshold, if so output as
   // brightness color

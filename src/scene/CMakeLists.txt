@@ -1,4 +1,1 @@
-add_subdirectory(render)
-add_subdirectory(io)
-
 target_sources(${PROJECT_NAME} PRIVATE sceneManager.c)

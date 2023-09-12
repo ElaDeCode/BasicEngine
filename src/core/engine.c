@@ -1,5 +1,5 @@
 #include "engine.h"
-#include "modules/io/keys.h"
+#include "core/inputMap.h"
 
 extern Engine engine;
 

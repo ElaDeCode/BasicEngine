@@ -25,10 +25,12 @@ void main() {
   vertPos = pos;
 }
 
+vec3 timeOffset = time + vec3(20);
+vec3 fakeTime = vec3(timeOffset.x, timeOffset.y, timeOffset.z * 0.01);
 vec3 rotate(vec3 pos, int InstanceID) {
-  float yaw = instanceOffset.x * time * 0.001;
-  float pitch = instanceOffset.y * time * 0.1;
-  float roll = instanceOffset.z * time * 0.1;
+  float yaw = instanceOffset.x * fakeTime.x * 0.1;
+  float pitch = instanceOffset.y * fakeTime.y * 0.1;
+  float roll = instanceOffset.z * fakeTime.z * -0.1;
 
   float sinYaw = sin(radians(yaw));
   float cosYaw = cos(radians(yaw));
