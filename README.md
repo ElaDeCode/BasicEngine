@@ -24,13 +24,12 @@ CMake is configured. If the project gains traction, I'll provide detailed instal
   
   - (I accidentally deleted the live shader update part (with f5), but) the shaders are compiled at runtime.
   
+  - Live shader updates
   - Manual resource cleaning.
   - Cuboids can be easily added using code.
   - Easy to build with cmake
   
 # todo:
-  - Live updates (i have the code i just accidentally deleted)
-  - Modify the projection matrix for better use of the OpenGL rendering area. (It causes objects outside the rendering box to disappear.)
   - Automatic resource cleaner
 
 # long term goal:
